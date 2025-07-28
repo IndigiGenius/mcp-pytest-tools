@@ -349,9 +349,26 @@ docs/user_guide.md                           # 80 lines
 - Documentation tests: Automated with examples
 - Mutation tests: Checkpoints after Phase 2.3, 4, and 5
 
-## Phase 5: Advanced Quality Assurance (3 PRs, ~1200 lines)
+## Phase 5: Advanced Quality Assurance (4 PRs, ~1550 lines)
 
-### PR 5.1: Mutation Testing Integration (~400 lines)
+### PR 5.1: MyPy Type Checking Tool (~350 lines)
+**Goal**: Implement `mypy_check` tool for type validation
+
+**Files**:
+```
+mcp_pytest_tools/tools/mypy.py               # 180 lines
+mcp_pytest_tools/parsers/mypy.py             # 120 lines
+mcp_pytest_tools/models.py                   # +30 lines
+tests/test_mypy.py                           # 20 lines
+```
+
+**Features**:
+- Run mypy type checking on specified paths
+- Parse mypy output for errors and warnings
+- Generate structured type check reports
+- Token-efficient alternative to running mypy manually (saves 100-300 tokens per development phase)
+
+### PR 5.2: Mutation Testing Integration (~400 lines)
 **Goal**: Implement `run_mutation_tests` tool
 
 **Files**:
@@ -368,7 +385,7 @@ tests/test_mutation.py                       # 40 lines
 - Identify surviving mutants
 - Generate actionable reports for test improvements
 
-### PR 5.2: Test Quality Metrics (~400 lines)
+### PR 5.3: Test Quality Metrics (~400 lines)
 **Goal**: Implement `analyze_test_quality` tool
 
 **Files**:
@@ -385,7 +402,7 @@ tests/test_quality.py                        # 20 lines
 - Identify under-tested code paths
 - Quality trend tracking
 
-### PR 5.3: Test Optimization Recommendations (~400 lines)
+### PR 5.4: Test Optimization Recommendations (~400 lines)
 **Goal**: Implement `suggest_test_improvements` tool
 
 **Files**:

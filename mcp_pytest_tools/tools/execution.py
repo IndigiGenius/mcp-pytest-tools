@@ -72,7 +72,9 @@ class TestExecutionTool:
                 stdout = result.stdout or ""
                 stderr = result.stderr or ""
             else:
-                result = subprocess.run(cmd, capture_output=False, text=True, timeout=timeout)
+                result = subprocess.run(
+                    cmd, capture_output=False, text=True, timeout=timeout
+                )
                 stdout = ""
                 stderr = ""
 
