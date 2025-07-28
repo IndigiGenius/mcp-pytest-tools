@@ -1,6 +1,6 @@
 """Pytest collection utilities for parsing test discovery output."""
 
-from typing import Any, Dict, List
+from typing import Any
 
 
 class PytestCollector:
@@ -10,13 +10,13 @@ class PytestCollector:
         """Initialize the pytest collector."""
         pass
 
-    def parse_collection_output(self, output: str) -> List[Dict[str, Any]]:
+    def parse_collection_output(self, output: str) -> list[dict[str, Any]]:
         """
         Parse pytest collection output into structured test data.
-        
+
         Args:
             output: Raw pytest collection output
-            
+
         Returns:
             List of test dictionaries with metadata
         """

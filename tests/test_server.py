@@ -65,7 +65,7 @@ class TestMCPPytestServer:
     def test_get_server_info(self, server):
         """Test structured server info retrieval."""
         info = server.get_server_info()
-        
+
         assert isinstance(info, ServerInfo)
         assert info.name == "mcp-pytest-tools"
         assert info.version == "0.1.0"
@@ -76,25 +76,26 @@ class TestMCPPytestServer:
         tool_info = ToolInfo(
             name="test_tool",
             description="A test tool",
-            parameters={"param1": {"type": "string"}}
+            parameters={"param1": {"type": "string"}},
         )
-        
+
         with patch("mcp_pytest_tools.server.logger") as mock_logger:
             server.register_tool("test_tool", tool_info)
             mock_logger.info.assert_called_with("Registered tool: test_tool")
-        
+
         assert "test_tool" in server.tools
         assert server.tools["test_tool"] == tool_info
 
     @pytest.mark.asyncio
     async def test_run_method(self, server):
         """Test server run method."""
-        with patch.object(server, 'startup') as mock_startup, \
-             patch.object(server, 'shutdown') as mock_shutdown, \
-             patch("mcp_pytest_tools.server.logger") as mock_logger:
-            
+        with (
+            patch.object(server, "startup") as mock_startup,
+            patch.object(server, "shutdown") as mock_shutdown,
+            patch("mcp_pytest_tools.server.logger") as mock_logger,
+        ):
             await server.run()
-            
+
             mock_startup.assert_called_once()
             mock_shutdown.assert_called_once()
             mock_logger.info.assert_called_with("MCP pytest server running")
@@ -103,17 +104,16 @@ class TestMCPPytestServer:
     async def test_run_method_with_transport_options(self, server):
         """Test server run method with transport options."""
         transport_options = {"host": "localhost", "port": 8080}
-        
-        with patch.object(server, 'startup'), \
-             patch.object(server, 'shutdown'):
+
+        with patch.object(server, "startup"), patch.object(server, "shutdown"):
             await server.run(transport_options)
 
-    @pytest.mark.asyncio 
+    @pytest.mark.asyncio
     async def test_handler_registration(self, server):
         """Test that handlers are properly registered."""
         # The handlers are registered during __init__ via _register_handlers
         # This test verifies they exist by checking the server has the _server attribute
-        assert hasattr(server, '_server')
+        assert hasattr(server, "_server")
         assert server._server is not None
 
 
@@ -123,7 +123,7 @@ class TestServerFactory:
     def test_create_server(self):
         """Test server factory function."""
         server = create_server()
-        
+
         assert isinstance(server, MCPPytestServer)
         assert server.name == "mcp-pytest-tools"
         assert server.version == "0.1.0"
@@ -131,13 +131,14 @@ class TestServerFactory:
     @pytest.mark.asyncio
     async def test_main_function(self):
         """Test main entry point function."""
-        with patch('mcp_pytest_tools.server.create_server') as mock_create, \
-             patch.object(MCPPytestServer, 'run') as mock_run:
-            
+        with (
+            patch("mcp_pytest_tools.server.create_server") as mock_create,
+            patch.object(MCPPytestServer, "run") as mock_run,
+        ):
             mock_server = MCPPytestServer()
             mock_create.return_value = mock_server
-            
+
             await main()
-            
+
             mock_create.assert_called_once()
             mock_run.assert_called_once()

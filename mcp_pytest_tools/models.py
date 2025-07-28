@@ -51,9 +51,7 @@ class ErrorResponse(BaseModel):
 
     error_type: str = Field(..., description="Type of error that occurred")
     message: str = Field(..., description="Human-readable error message")
-    details: dict[str, Any] | None = Field(
-        None, description="Additional error details"
-    )
+    details: dict[str, Any] | None = Field(None, description="Additional error details")
 
 
 class TestResult(BaseModel):
@@ -64,9 +62,7 @@ class TestResult(BaseModel):
     test_name: str = Field(..., description="Name of the test function")
     status: str = Field(..., description="Test result status")
     duration: float = Field(..., description="Test execution time in seconds")
-    error_message: str | None = Field(
-        None, description="Error message if test failed"
-    )
+    error_message: str | None = Field(None, description="Error message if test failed")
 
     @field_validator("status")
     @classmethod
