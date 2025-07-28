@@ -75,6 +75,28 @@ uv run ruff check .
 uv run mypy mcp_pytest_tools/
 ```
 
+### Pre-Commit Workflow
+**IMPORTANT**: Always run these commands in order before committing:
+
+```bash
+# 1. Format code (fixes formatting issues automatically)
+uv run ruff format .
+
+# 2. Lint code (checks for code quality issues)
+uv run ruff check .
+
+# 3. Type check (ensures type safety)
+uv run mypy mcp_pytest_tools/
+
+# 4. Run tests (ensures functionality works)
+uv run pytest
+
+# 5. Check coverage (optional but recommended)
+uv run pytest --cov=mcp_pytest_tools --cov-report=term-missing
+```
+
+**CI Pipeline Order**: The GitHub Actions CI runs these same steps in the same order. Running them locally first prevents CI failures.
+
 ## Architecture Overview
 
 ### Core Components
