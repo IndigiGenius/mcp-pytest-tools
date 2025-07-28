@@ -18,7 +18,7 @@ class HealthCheckResponse(BaseModel):
 
     @field_validator("status")
     @classmethod
-    def validate_status(cls, v):
+    def validate_status(cls, v: str) -> str:
         """Validate status field values."""
         allowed_statuses = {"healthy", "unhealthy", "degraded"}
         if v not in allowed_statuses:
@@ -70,7 +70,7 @@ class TestResult(BaseModel):
 
     @field_validator("status")
     @classmethod
-    def validate_status(cls, v):
+    def validate_status(cls, v: str) -> str:
         """Validate test status values."""
         allowed_statuses = {"passed", "failed", "skipped", "error"}
         if v not in allowed_statuses:

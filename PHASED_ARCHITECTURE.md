@@ -152,6 +152,13 @@ tests/test_coverage.py                       # 40 lines
 - Coverage trend tracking
 - Integration with pytest-cov
 
+### Mutation Testing Checkpoint 1
+**After Phase 2.3 Coverage Integration**
+- Run mutmut on the codebase
+- Ensure test suite catches > 80% of mutations
+- Document any surviving mutants for future improvement
+- This validates that our tests are actually testing behavior, not just executing code
+
 ### PR 2.4: Performance Analysis (~410 lines)
 **Goal**: Implement `find_slow_tests` tool
 
@@ -294,6 +301,13 @@ docs/user_guide.md                           # 80 lines
 - Integration guides
 - Troubleshooting guide
 
+### Mutation Testing Checkpoint 2
+**End of Phase 4**
+- Run comprehensive mutation testing on entire codebase
+- Target: 85% mutation kill rate
+- Focus on critical components (server, tools, parsers)
+- Create mutation testing report for documentation
+
 ## Success Metrics
 
 ### Code Quality Metrics
@@ -333,5 +347,65 @@ docs/user_guide.md                           # 80 lines
 - Integration tests: Separate PR at end of each phase
 - Performance tests: Phase 4 optimization
 - Documentation tests: Automated with examples
+- Mutation tests: Checkpoints after Phase 2.3, 4, and 5
+
+## Phase 5: Advanced Quality Assurance (3 PRs, ~1200 lines)
+
+### PR 5.1: Mutation Testing Integration (~400 lines)
+**Goal**: Implement `run_mutation_tests` tool
+
+**Files**:
+```
+mcp_pytest_tools/tools/mutation.py           # 200 lines
+mcp_pytest_tools/parsers/mutmut.py           # 120 lines
+mcp_pytest_tools/models.py                   # +40 lines
+tests/test_mutation.py                       # 40 lines
+```
+
+**Features**:
+- Run mutmut on specified modules
+- Parse mutation testing results
+- Identify surviving mutants
+- Generate actionable reports for test improvements
+
+### PR 5.2: Test Quality Metrics (~400 lines)
+**Goal**: Implement `analyze_test_quality` tool
+
+**Files**:
+```
+mcp_pytest_tools/tools/quality.py            # 180 lines
+mcp_pytest_tools/analyzers/metrics.py        # 140 lines
+mcp_pytest_tools/formatters/quality.py       # 60 lines
+tests/test_quality.py                        # 20 lines
+```
+
+**Features**:
+- Combine coverage, mutation, and complexity metrics
+- Test effectiveness scoring
+- Identify under-tested code paths
+- Quality trend tracking
+
+### PR 5.3: Test Optimization Recommendations (~400 lines)
+**Goal**: Implement `suggest_test_improvements` tool
+
+**Files**:
+```
+mcp_pytest_tools/tools/recommendations.py    # 200 lines
+mcp_pytest_tools/analyzers/suggestions.py    # 130 lines
+tests/test_recommendations.py                # 70 lines
+```
+
+**Features**:
+- AI-powered test gap analysis
+- Suggest missing test cases based on mutations
+- Recommend test refactoring opportunities
+- Generate test improvement roadmap
+
+### Mutation Testing Checkpoint 3
+**End of Phase 5**
+- Achieve 90% mutation kill rate
+- All tools have mutation-tested test suites
+- Document mutation testing best practices
+- Create mutation testing CI pipeline
 
 This phased approach ensures steady progress with manageable changes while delivering value incrementally throughout the development process.

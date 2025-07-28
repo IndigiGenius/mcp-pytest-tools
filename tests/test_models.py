@@ -9,6 +9,8 @@ from mcp_pytest_tools.models import (
     ErrorResponse,
     HealthCheckResponse,
     ServerInfo,
+    TestResult,
+    TestSummary,
     ToolInfo,
 )
 
@@ -111,3 +113,98 @@ class TestErrorResponse:
         )
 
         assert error.details is None
+
+
+class TestTestResult:
+    """Test suite for TestResult model."""
+
+    def test_valid_test_result(self):
+        """Test valid test result creation."""
+        result = TestResult(
+            test_id="test_001",
+            test_path="tests/test_example.py",
+            test_name="test_example_function",
+            status="passed",
+            duration=0.5,
+            error_message=None,
+        )
+
+        assert result.test_id == "test_001"
+        assert result.test_path == "tests/test_example.py"
+        assert result.test_name == "test_example_function"
+        assert result.status == "passed"
+        assert result.duration == 0.5
+        assert result.error_message is None
+
+    def test_failed_test_result_with_error(self):
+        """Test failed test result with error message."""
+        result = TestResult(
+            test_id="test_002",
+            test_path="tests/test_failing.py",
+            test_name="test_failing_function",
+            status="failed",
+            duration=0.2,
+            error_message="AssertionError: 1 != 2",
+        )
+
+        assert result.status == "failed"
+        assert result.error_message == "AssertionError: 1 != 2"
+
+    def test_invalid_test_status_validation(self):
+        """Test validation fails for invalid test status."""
+        with pytest.raises(ValidationError):
+            TestResult(
+                test_id="test_003",
+                test_path="tests/test_invalid.py",
+                test_name="test_invalid_function",
+                status="invalid_status",
+                duration=0.1,
+            )
+
+
+class TestTestSummary:
+    """Test suite for TestSummary model."""
+
+    def test_valid_test_summary(self):
+        """Test valid test summary creation."""
+        summary = TestSummary(
+            total_tests=10,
+            passed=8,
+            failed=1,
+            skipped=1,
+            errors=0,
+            duration=5.5,
+        )
+
+        assert summary.total_tests == 10
+        assert summary.passed == 8
+        assert summary.failed == 1
+        assert summary.skipped == 1
+        assert summary.errors == 0
+        assert summary.duration == 5.5
+
+    def test_success_rate_calculation(self):
+        """Test success rate calculation."""
+        summary = TestSummary(
+            total_tests=10,
+            passed=8,
+            failed=2,
+            skipped=0,
+            errors=0,
+            duration=3.0,
+        )
+
+        assert summary.success_rate == 80.0
+
+    def test_success_rate_with_zero_tests(self):
+        """Test success rate calculation with zero tests."""
+        summary = TestSummary(
+            total_tests=0,
+            passed=0,
+            failed=0,
+            skipped=0,
+            errors=0,
+            duration=0.0,
+        )
+
+        assert summary.success_rate == 0.0

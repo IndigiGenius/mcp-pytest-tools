@@ -28,8 +28,8 @@ dev = [
     "pytest-cov>=4.0.0",
     "pytest-asyncio>=0.21.0",
     "pytest-xdist>=3.0.0",
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
+    "mypy>=1.17.0",
+    "ruff>=0.12.5",
     "pre-commit>=3.0.0",
 ]
 
@@ -76,9 +76,3 @@ exclude_lines = [
     "@abstractmethod",
 ]
 
-[dependency-groups]
-dev = [
-    "mypy>=1.17.0",
-    "pytest-asyncio>=1.1.0",
-    "ruff>=0.12.5",
-]
