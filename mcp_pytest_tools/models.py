@@ -90,3 +90,47 @@ class TestSummary(BaseModel):
         if self.total_tests == 0:
             return 0.0
         return (self.passed / self.total_tests) * 100.0
+
+
+class TestExecutionRequest(BaseModel):
+    """Request model for test execution."""
+
+    test_path: str = Field(
+        ...,
+        description="Path to the test to execute (file::test or file)",
+        min_length=1,
+    )
+    timeout: int = Field(
+        30, description="Timeout in seconds for test execution", ge=1, le=3600
+    )
+    capture_output: bool = Field(
+        True, description="Whether to capture stdout and stderr"
+    )
+    pytest_args: list[str] = Field(
+        default_factory=list, description="Additional pytest command line arguments"
+    )
+
+
+class TestExecutionResult(BaseModel):
+    """Result of a test execution."""
+
+    test_path: str = Field(..., description="Path to the test that was executed")
+    status: str = Field(..., description="Execution status")
+    exit_code: int = Field(..., description="Process exit code")
+    stdout: str = Field("", description="Captured standard output")
+    stderr: str = Field("", description="Captured standard error")
+    duration: float = Field(..., description="Execution duration in seconds")
+    started_at: datetime = Field(..., description="When execution started")
+    completed_at: datetime = Field(..., description="When execution completed")
+    error_message: str | None = Field(
+        None, description="Error message if execution failed"
+    )
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, v: str) -> str:
+        """Validate execution status values."""
+        allowed_statuses = {"passed", "failed", "error", "timeout", "skipped"}
+        if v not in allowed_statuses:
+            raise ValueError(f"Status must be one of: {allowed_statuses}")
+        return v
