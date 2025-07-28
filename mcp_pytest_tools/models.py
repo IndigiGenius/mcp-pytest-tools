@@ -96,23 +96,18 @@ class TestExecutionRequest(BaseModel):
     """Request model for test execution."""
 
     test_path: str = Field(
-        ..., 
+        ...,
         description="Path to the test to execute (file::test or file)",
-        min_length=1
+        min_length=1,
     )
     timeout: int = Field(
-        30, 
-        description="Timeout in seconds for test execution",
-        ge=1,
-        le=3600
+        30, description="Timeout in seconds for test execution", ge=1, le=3600
     )
     capture_output: bool = Field(
-        True, 
-        description="Whether to capture stdout and stderr"
+        True, description="Whether to capture stdout and stderr"
     )
     pytest_args: list[str] = Field(
-        default_factory=list,
-        description="Additional pytest command line arguments"
+        default_factory=list, description="Additional pytest command line arguments"
     )
 
 
@@ -127,8 +122,10 @@ class TestExecutionResult(BaseModel):
     duration: float = Field(..., description="Execution duration in seconds")
     started_at: datetime = Field(..., description="When execution started")
     completed_at: datetime = Field(..., description="When execution completed")
-    error_message: str | None = Field(None, description="Error message if execution failed")
-    
+    error_message: str | None = Field(
+        None, description="Error message if execution failed"
+    )
+
     @field_validator("status")
     @classmethod
     def validate_status(cls, v: str) -> str:
