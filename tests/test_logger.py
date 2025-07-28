@@ -135,6 +135,7 @@ class TestJsonFormatter:
     
     def test_json_formatting_with_exception(self):
         """Test JSON formatting with exception information."""
+        import sys
         from mcp_pytest_tools.logger import JsonFormatter
         
         formatter = JsonFormatter()
@@ -142,6 +143,7 @@ class TestJsonFormatter:
         try:
             raise ValueError("Test exception")
         except ValueError:
+            exc_info = sys.exc_info()
             record = logging.LogRecord(
                 name="test_json",
                 level=logging.ERROR,
@@ -149,7 +151,7 @@ class TestJsonFormatter:
                 lineno=10,
                 msg="Exception occurred",
                 args=(),
-                exc_info=True
+                exc_info=exc_info
             )
             record.context = {"operation": "test"}
             
