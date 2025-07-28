@@ -30,10 +30,13 @@ jobs:
       run: |
         uv sync --dev
     
+    - name: Format with ruff
+      run: |
+        uv run ruff format .
+    
     - name: Lint with ruff
       run: |
         uv run ruff check .
-        uv run ruff format --check .
     
     - name: Type check with mypy
       run: |
