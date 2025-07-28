@@ -14,25 +14,25 @@ logger = logging.getLogger(__name__)
 class MCPPytestServer:
     """MCP server providing pytest functionality as tools."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the MCP pytest server."""
         self.name = "mcp-pytest-tools"
         self.version = "0.1.0"
-        self.tools = {}
-        self._server = Server(self.name)
+        self.tools: dict[str, ToolInfo] = {}
+        self._server: Any = Server(self.name)
 
         # Register server handlers
         self._register_handlers()
 
-    def _register_handlers(self):
+    def _register_handlers(self) -> None:
         """Register MCP server handlers."""
 
-        @self._server.list_tools()
+        @self._server.list_tools()  # type: ignore[misc]
         async def handle_list_tools() -> list[Tool]:
             """Handle list tools request."""
             return await self.list_tools()
 
-        @self._server.call_tool()
+        @self._server.call_tool()  # type: ignore[misc]
         async def handle_call_tool(name: str, arguments: dict[str, Any]) -> Any:
             """Handle tool call request."""
             if name == "health_check":
@@ -51,11 +51,11 @@ class MCPPytestServer:
         # Initially empty, will be populated in future PRs
         return []
 
-    async def startup(self):
+    async def startup(self) -> None:
         """Server startup process."""
         logger.info("MCP pytest server starting up")
 
-    async def shutdown(self):
+    async def shutdown(self) -> None:
         """Server shutdown process."""
         logger.info("MCP pytest server shutting down")
 
@@ -74,12 +74,12 @@ class MCPPytestServer:
             name=self.name, version=self.version, tools=list(self.tools.keys())
         )
 
-    def register_tool(self, name: str, tool_info: ToolInfo):
+    def register_tool(self, name: str, tool_info: ToolInfo) -> None:
         """Register a new tool with the server."""
         self.tools[name] = tool_info
         logger.info(f"Registered tool: {name}")
 
-    async def run(self, transport_options: dict[str, Any] = None):
+    async def run(self, transport_options: dict[str, Any] | None = None) -> None:
         """Run the MCP server."""
         await self.startup()
         try:
@@ -94,7 +94,7 @@ def create_server() -> MCPPytestServer:
     return MCPPytestServer()
 
 
-async def main():
+async def main() -> None:
     """Main entry point for running the server."""
     server = create_server()
     await server.run()
