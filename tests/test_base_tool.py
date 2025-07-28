@@ -239,10 +239,10 @@ class TestBaseToolSubclassRequirements:
         # BaseTool should be abstract and require _execute implementation
         with pytest.raises(TypeError):
             # This should fail because _execute is not implemented
-            class Incompletetool(BaseTool):
+            class IncompleteTool(BaseTool):
                 pass
             
-            tool = IncompleteTestatool()  # type: ignore
+            tool = IncompleteTool()  # type: ignore
     
     @pytest.mark.asyncio
     async def test_execute_calls_internal_execute(self):
