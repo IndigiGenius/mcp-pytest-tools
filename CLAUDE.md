@@ -22,6 +22,21 @@ uv sync
 
 # Alternative: pip setup
 # pip install -e .
+
+# Set up pre-commit hooks for micro-commit workflow
+uv add --dev pre-commit
+pre-commit install
+```
+
+Create `.pre-commit-config.yaml`:
+```yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
 ```
 
 ### Running the Application
@@ -95,10 +110,31 @@ This project follows TDD principles:
 2. **Green**: Write minimal code to make the test pass
 3. **Refactor**: Improve code quality while keeping tests passing
 
+#### AI-Assisted Test Generation
+- Use Claude Code to generate comprehensive test suites: "Generate pytest tests for [function] including edge cases for [specific scenarios]"
+- Target 85%+ code coverage with meaningful tests
+- Use property-based testing (Hypothesis) for edge case discovery
+- Run tests in parallel with pytest-xdist for faster feedback
+
 ### Git Workflow
 - **Always create a new branch** for features/fixes
 - Branch naming: `feature/description`, `fix/description`, `docs/description`
 - Never commit directly to main
+
+#### Micro-Commit Strategy
+- **Commit frequency**: Target 4-15 commits per hour during active development
+- **Commit size**: Keep changes to 20-50 lines per commit
+- **Atomic changes**: Each commit should represent ONE logical change:
+  - A single function implementation
+  - A variable rename across files
+  - Adding one test case
+  - Fixing one specific bug
+- **Example for MCP tools**: 
+  1. Commit 1: Add tool interface definition
+  2. Commit 2: Implement input validation
+  3. Commit 3: Add core functionality
+  4. Commit 4: Add error handling
+  5. Commit 5: Add tests for the tool
 
 ### Pull Request Guidelines
 - **Keep PRs focused and manageable**: Target ~400 lines of code changes (see PHASED_ARCHITECTURE.md)
@@ -107,12 +143,53 @@ This project follows TDD principles:
 - Include tests for new functionality (counts toward line limit)
 - Update documentation as needed
 
+#### Risk-Based Review Strategy
+- **Auto-merge candidates** (after CI passes):
+  - Pure formatting changes
+  - Test additions with no logic changes
+  - Documentation updates
+- **Light review** (1 reviewer):
+  - Minor refactors
+  - Dependency updates
+  - Non-critical bug fixes
+- **Full review** (2+ reviewers):
+  - New MCP tool implementations
+  - Changes to core server logic
+  - Security-related modifications
+
 ### Code Style
 - Python 3.x with type hints
 - Google-style docstrings
 - Meaningful variable and function names
 - Keep functions small and focused
 - DRY (Don't Repeat Yourself) principle
+
+### Claude Code Workflow Optimization
+
+#### Think-Plan-Code-Commit Pattern
+When working with Claude Code, structure your requests as:
+1. **Research phase**: "Analyze the existing [component] in [path]"
+2. **Planning phase**: "Create a detailed plan for [specific goal]"
+3. **Implementation**: "Implement step [N] of the plan - [specific task]"
+4. **Commit**: "Create a micro-commit with conventional commit message"
+
+##### MCP Pytest Tools Examples:
+```
+1. Research: "Analyze how pytest collects tests in pytest source code"
+2. Plan: "Create a plan for implementing the list_tests MCP tool"
+3. Implement: "Implement the test discovery parser in parsers/collector.py"
+4. Test: "Generate comprehensive tests for the list_tests tool including edge cases"
+5. Commit: "Create a micro-commit for the test discovery implementation"
+```
+
+#### Multi-Agent Development
+For complex features, use multiple Claude Code instances in parallel:
+- Terminal 1: Core feature implementation
+- Terminal 2: Test development
+- Terminal 3: Documentation updates
+- Terminal 4: Integration and refactoring
+
+Each agent maintains focused context for better results.
 
 ## Project Status
 
@@ -135,6 +212,72 @@ Initial project setup and core MCP server implementation
 4. **Phase 4**: Polish - Optimization and documentation (3 PRs, ~1200 lines)
 
 See PHASED_ARCHITECTURE.md for detailed implementation plan with ~400 lines per PR.
+
+## Recommended Development Tools
+
+### Code Quality & Speed
+- **Ruff**: Fast Python linter and formatter (replaces Black, isort, flake8)
+  ```bash
+  uv run ruff format .  # Format code
+  uv run ruff check .   # Lint code
+  ```
+
+### Testing Acceleration
+- **pytest-xdist**: Parallel test execution
+  ```bash
+  uv run pytest -n auto  # Run tests in parallel
+  ```
+- **Hypothesis**: Property-based testing for edge cases
+- **mutmut**: Mutation testing to validate test effectiveness
+
+### Commit Automation
+- **Conventional Commits**: Use clear, structured commit messages
+- **Claude Code Integration**: Already handles commit message generation with appropriate context
+
+### Multi-Repository Management
+- **mani CLI**: Lightweight tool for managing multiple repos
+- **GitKraken Workspaces**: Visual management for complex projects
+
+## CI/CD and Quality Gates
+
+### GitHub Actions Setup
+Create `.github/workflows/ci.yml`:
+```yaml
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install uv
+      - run: uv sync
+      - run: uv run pytest --cov
+      - run: uv run ruff check .
+      - run: uv run mypy mcp_pytest_tools/
+```
+
+### Quality Gates
+- **Auto-merge eligible**: Coverage ≥85%, all tests pass, no linting errors
+- **Manual review required**: Coverage drops >5%, new public APIs
+
+## Development Metrics
+
+### Velocity Tracking
+```bash
+# Weekly commit count
+git log --since="1 week ago" --oneline | wc -l
+
+# Average PR cycle time (using gh CLI)
+gh pr list --state merged --limit 10 --json createdAt,mergedAt
+```
+
+### Key Metrics to Monitor
+- **Commit frequency**: Target 50+ micro-commits/week during active development
+- **PR cycle time**: Target <24 hours from creation to merge
+- **Test coverage**: Maintain >85%
+- **Build success rate**: Target >95%
 
 ## Common Tasks
 
@@ -193,5 +336,6 @@ python -m mcp_pytest_tools.test_client
 
 ---
 
-Last Updated: 2025-07-26
-Version: 1.0
+Last Updated: 2025-07-27
+Version: 1.1
+Changes: Added micro-commit strategy, Claude Code workflow optimization, AI-assisted testing, and recommended development tools
