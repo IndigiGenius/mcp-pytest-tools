@@ -66,10 +66,10 @@ uv run pytest -v
 ### Code Quality
 ```bash
 # Format code
-uv run ruff format .
+uv run ruff format . --quiet
 
 # Lint code
-uv run ruff check .
+uv run ruff check . --quiet
 
 # Type checking
 uv run mypy mcp_pytest_tools/
@@ -80,10 +80,10 @@ uv run mypy mcp_pytest_tools/
 
 ```bash
 # 1. Format code (fixes formatting issues automatically)
-uv run ruff format .
+uv run ruff format . --quiet
 
 # 2. Lint code (checks for code quality issues)
-uv run ruff check .
+uv run ruff check . --quiet
 
 # 3. Type check (ensures type safety)
 uv run mypy mcp_pytest_tools/
@@ -240,8 +240,8 @@ See PHASED_ARCHITECTURE.md for detailed implementation plan with ~400 lines per 
 ### Code Quality & Speed
 - **Ruff**: Fast Python linter and formatter (replaces Black, isort, flake8)
   ```bash
-  uv run ruff format .  # Format code
-  uv run ruff check .   # Lint code
+  uv run ruff format . --quiet  # Format code (saves ~20-35 tokens)
+  uv run ruff check . --quiet   # Lint code (saves ~20-35 tokens)
   ```
 
 ### Testing Acceleration
