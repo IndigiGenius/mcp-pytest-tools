@@ -3,7 +3,7 @@ name = "mcp-pytest-tools"
 version = "0.1.0"
 description = "MCP server providing pytest tools for AI assistants"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "IndigiGenius", email = "shawn@firstlanguages.ai"}]
 keywords = ["mcp", "pytest", "testing", "ai", "assistant"]
@@ -12,7 +12,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -40,7 +39,9 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 88
-target-version = "py39"
+target-version = "py310"
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "Q"]
 ignore = ["E501"]  # Line too long - let formatter handle
 
@@ -49,7 +50,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -58,6 +59,9 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = [
+    "asyncio: marks tests as async",
+]
 addopts = "--strict-markers"
 
 [tool.coverage.run]
@@ -70,4 +74,11 @@ exclude_lines = [
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
     "@abstractmethod",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17.0",
+    "pytest-asyncio>=1.1.0",
+    "ruff>=0.12.5",
 ]
