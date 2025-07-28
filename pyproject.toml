@@ -39,7 +39,9 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 88
-target-version = "py39"
+target-version = "py310"
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "Q"]
 ignore = ["E501"]  # Line too long - let formatter handle
 
@@ -72,4 +74,11 @@ exclude_lines = [
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
     "@abstractmethod",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17.0",
+    "pytest-asyncio>=1.1.0",
+    "ruff>=0.12.5",
 ]

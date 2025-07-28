@@ -1,13 +1,15 @@
 """Tests for pydantic models."""
 
-import pytest
 from datetime import datetime
+
+import pytest
 from pydantic import ValidationError
+
 from mcp_pytest_tools.models import (
-    HealthCheckResponse,
-    ToolInfo,
-    ServerInfo,
     ErrorResponse,
+    HealthCheckResponse,
+    ServerInfo,
+    ToolInfo,
 )
 
 
@@ -17,11 +19,9 @@ class TestHealthCheckResponse:
     def test_valid_health_check_response(self):
         """Test valid health check response creation."""
         response = HealthCheckResponse(
-            status="healthy",
-            server_name="mcp-pytest-tools",
-            version="0.1.0"
+            status="healthy", server_name="mcp-pytest-tools", version="0.1.0"
         )
-        
+
         assert response.status == "healthy"
         assert response.server_name == "mcp-pytest-tools"
         assert response.version == "0.1.0"
@@ -30,11 +30,9 @@ class TestHealthCheckResponse:
     def test_health_check_response_defaults(self):
         """Test health check response with minimal data."""
         response = HealthCheckResponse(
-            status="healthy",
-            server_name="test-server",
-            version="1.0.0"
+            status="healthy", server_name="test-server", version="1.0.0"
         )
-        
+
         assert response.timestamp is not None
         assert isinstance(response.timestamp, datetime)
 
@@ -42,9 +40,7 @@ class TestHealthCheckResponse:
         """Test validation fails for invalid status."""
         with pytest.raises(ValidationError):
             HealthCheckResponse(
-                status="invalid_status",
-                server_name="test",
-                version="1.0.0"
+                status="invalid_status", server_name="test", version="1.0.0"
             )
 
 
@@ -56,11 +52,9 @@ class TestToolInfo:
         tool = ToolInfo(
             name="run_test",
             description="Execute a single test",
-            parameters={
-                "test_path": {"type": "string", "required": True}
-            }
+            parameters={"test_path": {"type": "string", "required": True}},
         )
-        
+
         assert tool.name == "run_test"
         assert tool.description == "Execute a single test"
         assert "test_path" in tool.parameters
@@ -68,11 +62,9 @@ class TestToolInfo:
     def test_tool_info_with_empty_parameters(self):
         """Test tool info with empty parameters."""
         tool = ToolInfo(
-            name="health_check",
-            description="Server health check",
-            parameters={}
+            name="health_check", description="Server health check", parameters={}
         )
-        
+
         assert tool.parameters == {}
 
 
@@ -82,11 +74,9 @@ class TestServerInfo:
     def test_valid_server_info(self):
         """Test valid server info creation."""
         info = ServerInfo(
-            name="mcp-pytest-tools",
-            version="0.1.0",
-            tools=["run_test", "list_tests"]
+            name="mcp-pytest-tools", version="0.1.0", tools=["run_test", "list_tests"]
         )
-        
+
         assert info.name == "mcp-pytest-tools"
         assert info.version == "0.1.0"
         assert len(info.tools) == 2
@@ -94,12 +84,8 @@ class TestServerInfo:
 
     def test_server_info_empty_tools(self):
         """Test server info with empty tools list."""
-        info = ServerInfo(
-            name="test-server",
-            version="1.0.0",
-            tools=[]
-        )
-        
+        info = ServerInfo(name="test-server", version="1.0.0", tools=[])
+
         assert info.tools == []
 
 
@@ -111,9 +97,9 @@ class TestErrorResponse:
         error = ErrorResponse(
             error_type="ValidationError",
             message="Invalid test path provided",
-            details={"path": "/invalid/path"}
+            details={"path": "/invalid/path"},
         )
-        
+
         assert error.error_type == "ValidationError"
         assert error.message == "Invalid test path provided"
         assert error.details["path"] == "/invalid/path"
@@ -121,8 +107,7 @@ class TestErrorResponse:
     def test_error_response_without_details(self):
         """Test error response without details."""
         error = ErrorResponse(
-            error_type="RuntimeError",
-            message="Server error occurred"
+            error_type="RuntimeError", message="Server error occurred"
         )
-        
+
         assert error.details is None
